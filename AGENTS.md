@@ -1,0 +1,13 @@
+# Draw.io VS Code extension guide
+
+`src/` contains the extension, supporting plugin code integrates Draw.io, and `drawio/` is a Git submodule pinned through `.gitmodules`. Preserve embedded diagram data in SVG/PNG files and the existing VS Code editing/serialization contracts.
+
+CI uses Node 22 and Yarn: `yarn install --frozen-lockfile` installs dependencies. Initialize the pinned submodule with `git submodule update --init --recursive` when a build needs its assets; this fetches source and should not move the submodule revision. `yarn build` builds extension/plugins and packages a prerelease VSIX. `yarn lint` is currently a placeholder. `_lint` is also blocked in this checkout: it invokes `yarn run-script check-version`, but the required `scripts/check-version` module is absent, so it fails before reaching Prettier. Use `yarn prettier --check ./src` for the existing source-format check and report that this does not validate version consistency or repair `_lint`. There is no declared automated test suite or separate typecheck script.
+
+Development uses the webpack watch commands and VS Code's configured Extension Development Host. For behavior changes, open an isolated sample diagram in that host, exercise editing/save/reopen, and verify the resulting embedded data rather than relying on a VSIX build. Keep signing/marketplace deployment and release workflows separate from local packaging. Don't edit vendored Draw.io source or update its pin as incidental cleanup.
+
+## Completing work
+
+Carry the authorized change through the relevant checks and repair failures it causes. Make routine, reversible implementation choices using existing patterns; ask only when missing information, a material product decision, or an authorization boundary prevents the next step. Existing authorization remains valid within its scope. If blocked, name the exact action and missing prerequisite, retain concise evidence, and continue independent work.
+
+Choose verification proportional to the change. For instructions or prose, inspect changed paths, links, and local instruction precedence and run `git diff --check -- <changed-paths>`; don't install dependencies or run the application solely for a prose edit. For behavior changes, exercise the affected behavior and applicable checks below, then broaden only for failures or unresolved risk. Report files changed, checks actually run and their results, commands only inspected, and remaining limitations. A build or source inspection alone does not prove runtime behavior. Continue through already-authorized follow-through; stop at explicit review checkpoints or boundaries requiring new authorization.
